@@ -2,4 +2,22 @@ spring:
   application:
     name: demo
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/student-application # jdbc:postgresql://localhost:5432/paste your databasename
+    username: postgres   # paste your username
+    password: postgres   # paste your password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update            # Options: none, validate, update, create, create-drop
+    show-sql: true                # Show SQL queries in logs
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always                 # Run schema/data scripts on startup if present
 

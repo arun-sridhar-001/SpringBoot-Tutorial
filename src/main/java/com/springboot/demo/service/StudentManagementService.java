@@ -2,15 +2,18 @@ package com.springboot.demo.service;
 
 import com.springboot.demo.exception.StudentNotFoundException;
 import com.springboot.demo.model.Student;
+import com.springboot.demo.repositorty.StudentRepository;
 import com.springboot.demo.response.StudentResponse;
+import com.springboot.demo.response.SubjectResponse;
 import com.springboot.demo.service.utils.StudentMapperUtils;
+import com.springboot.demo.service.utils.SubjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -19,45 +22,56 @@ import java.util.UUID;
 public class StudentManagementService {
 
     private final StudentMapperUtils studentMapperUtils;
+    private final SubjectMapperUtils subjectMapperUtils;
 
-//    Logger log = LoggerFactory.getLogger(StudentManagementService.class);
+    private final StudentRepository studentRepository;
 
-
-    List<Student> studentList = new ArrayList<>();
 
     public String saveStudent(Student student) {
-        student.setId(UUID.randomUUID().toString());
-        studentList.add(student);
-        return student.getName() + " has been added successfully";
+        Student studentModel = studentRepository.save(student);
+        return studentModel.getName() + " has been added successfully";
     }
 
-    public List<Student> getAllStudents() {
-        return studentList;
+    public List<StudentResponse> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+
+        return students.stream()
+                .map(studentMapperUtils::mapToStudentResponse)
+                .toList();
     }
 
-    public Student findByStudentId(String id) throws StudentNotFoundException {
-        return studentList.stream()
-                .filter(student -> id.equals(student.getId()))
-                .findFirst().orElseThrow(
-                        () -> new StudentNotFoundException("Student not found in our source with ID: " + id)
-                );
+    public StudentResponse findByStudentId(String id) throws StudentNotFoundException {
+        Student student = studentRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new StudentNotFoundException("Student not found"));
+
+        List<SubjectResponse> subjectResponse = student.getSubjects().stream()
+                .map(sub -> subjectMapperUtils.mapToSubjectResponse(sub))
+                .collect(Collectors.toList());
+
+        return studentMapperUtils.mapToStudentResponse(student, subjectResponse);
     }
 
     public StudentResponse updateStudent(String studentId, String mobileNumber) {
         log.info("Trying to update student mobileNumber with {}", mobileNumber);
-        Student student = studentList.stream()
-                .filter(s -> studentId.equals(s.getId()))
-                .findFirst().orElseThrow(
-                        () -> new StudentNotFoundException("Student not found in our source with ID: " + studentId)
-                );
-
+        Student student = studentRepository.findById(UUID.fromString(studentId))
+                .orElseThrow(
+                        () -> new StudentNotFoundException("Student not found in our source with ID: " + studentId));
 
         student.setMobileNumber(mobileNumber);
-
+        studentRepository.save(student);
         return studentMapperUtils.mapToStudentResponse(student);
 
     }
 
-    //ToDo findByName method
+    public String deleteStudentById(String studentId) {
+        try {
+            studentRepository.deleteById(UUID.fromString(studentId));
+        }
+        catch (Exception e) {
+            throw e;
+        }
+        return studentId + " Deleted Successfully!!";
+
+    }
 
 }

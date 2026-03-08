@@ -2,21 +2,45 @@ package com.springboot.demo.model;
 
 import com.springboot.demo.bean.Gender;
 import com.springboot.demo.bean.StudentStatus;
+import jakarta.persistence.*;
+
 import lombok.*;
+import org.hibernate.engine.profile.Fetch;
+
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * file:///C:/Users/sridh/.gemini/antigravity/brain/4fb87574-f95e-4865-b688-7faef47e24bc/v2_hd_source.html
+ */
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@Entity
 public class Student {
-    private String id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String name;
     private Integer age;
+    @Enumerated(value = EnumType.STRING)
     private Gender gender;
     private String emailAddress;
     private String address;
     private String parentName;
     private String mobileNumber;
+    @Enumerated(value = EnumType.STRING)
     private StudentStatus status;
+
+
+    /**
+     * Inversion side
+     */
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Subject> subjects;
 
 
 //    public Student(String id, String name, Integer age, Gender gender, String emailAddress,

@@ -6,6 +6,7 @@ import com.springboot.demo.response.StudentResponse;
 import com.springboot.demo.service.StudentManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -27,13 +28,13 @@ public class StudentDetailController {
 
 
     @GetMapping("/all")
-    public List<Student> findAllStudents() {
+    public List<StudentResponse> findAllStudents() {
         return studentManagementService.getAllStudents();
     }
 
 
     @GetMapping("/{id}")
-    public Student findById(@PathVariable("id") String id) throws StudentNotFoundException {
+    public StudentResponse findById(@PathVariable("id") String id) throws StudentNotFoundException {
         return studentManagementService.findByStudentId(id);
     }
 
@@ -41,5 +42,11 @@ public class StudentDetailController {
     public StudentResponse updateStudent(@RequestParam(name = "studentId", required = true) String studentId,
                                          @RequestParam(name = "mobileNumber", required = true) String mobileNumber) {  //  mobileNumber -> request to update
         return studentManagementService.updateStudent(studentId, mobileNumber);
+    }
+
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteStudentById(@PathVariable("id") String id) {
+        return studentManagementService.deleteStudentById(id);
     }
 }

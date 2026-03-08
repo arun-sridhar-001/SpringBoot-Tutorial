@@ -7,9 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class StudentResponse {
     private String id;
     private String name;
@@ -19,4 +22,6 @@ public class StudentResponse {
     private String address;
     private String parentName;
     private StudentStatus status;
+
+    private List<SubjectResponse> subjectResponse;
 }
