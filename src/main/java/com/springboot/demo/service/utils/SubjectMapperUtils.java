@@ -6,8 +6,6 @@ import com.springboot.demo.request.SubjectRequest;
 import com.springboot.demo.response.SubjectResponse;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class SubjectMapperUtils {
 

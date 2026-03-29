@@ -34,7 +34,8 @@ public class StudentManagementService {
 
     public List<StudentResponse> getAllStudents() {
         List<Student> students = studentRepository.findAll();
-
+        Long count = studentRepository.getStudentCount("Madhan");
+        log.info("count is {}", count);
         return students.stream()
                 .map(studentMapperUtils::mapToStudentResponse)
                 .toList();

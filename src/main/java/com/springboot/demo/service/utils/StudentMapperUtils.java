@@ -1,7 +1,6 @@
 package com.springboot.demo.service.utils;
 
 import com.springboot.demo.model.Student;
-import com.springboot.demo.model.Subject;
 import com.springboot.demo.response.StudentResponse;
 import com.springboot.demo.response.SubjectResponse;
 import org.springframework.stereotype.Component;

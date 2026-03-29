@@ -5,7 +5,7 @@ import com.springboot.demo.bean.StudentStatus;
 import jakarta.persistence.*;
 
 import lombok.*;
-import org.hibernate.engine.profile.Fetch;
+
 
 import java.util.List;
 import java.util.UUID;
